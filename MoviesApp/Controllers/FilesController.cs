@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MoviesApp.Controllers
 {
@@ -19,17 +20,22 @@ namespace MoviesApp.Controllers
             }
             else
             {
-                
-                var fileName=Path.GetFileName(file.FileName);
-                var path=Path.Combine(Directory.GetCurrentDirectory(),"Files", fileName);
-
-                using (var fileStream = new FileStream(path, FileMode.Create))
+                var fileName = Path.GetFileName(file.FileName);
+                var lastPart = fileName.Split('.').Where(x => !string.IsNullOrWhiteSpace(x)).LastOrDefault();
+                if ((file.Length < 1048576) && ((String.Equals(lastPart,"pdf"))||(String.Equals(lastPart,"docx"))))
                 {
-                   file.CopyTo(fileStream);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", fileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    ViewBag.fn = fileName.ToString();
+                }
+                else {
+                    ViewBag.Message = "Allowed file size is upto 1 MB and allowed fily types are docx or pdf!";
+                    return View();
                 }
 
-                
-                ViewBag.fn = path.ToString();
             }
             return View();
         }
