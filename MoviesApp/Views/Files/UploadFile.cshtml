@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "UploadFile";
+}
+
+<h1>Upload your movie review here</h1>
+<p class="lead">Max. allowed size for the file is 1 MB. PDF/DOCX/TXT files are only allowed!</p>
+
+@using (Html.BeginForm("UploadFile", "FilesController", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        @Html.TextBox("file", "", new {  type= "file"}) <br /><br/>
+
+        <input type="submit" asp-action="UploadFile" class="btn btn-dark" value="Upload" />
+        <p class="text-danger"> @ViewBag.Message</p>
+        <p class="text-primary"> @ViewBag.fn</p>
+    </div>
+}

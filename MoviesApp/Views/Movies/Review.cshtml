@@ -1,0 +1,35 @@
+﻿@model IEnumerable<MoviesApp.Models.Movie>
+@{
+    ViewData["Title"] = "Let's Review";
+}
+<h3>
+    @Html.ActionLink("Add Review","AddReview","Movies")
+</h3>
+<h1>Review</h1>
+
+<table class="table table-striped table-bordered table-hover" style="text-align:center">
+    <tr>
+    <th>Id</th>
+     <th>Reviewer</th>
+     <th>Movie Name</th>
+     <th>Review</th>
+     <th>Rating</th>
+     <th>Action</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.Id</td>
+        <td>@item.Reviewer</td>
+        <td>@item.MovieName</td>
+        <td>@item.Review</td>
+        <td>@item.Rating</td>
+            <td> <a asp-action="Edit" asp-route-id=@item.Id  asp-controller="Movies" class="btn btn-success">Edit</a>&nbsp;
+                <a asp-action="Delete" asp-route-id=@item.Id asp-controller="Movies" class="btn btn-danger">Delete</a>
+            </td>
+    </tr>
+    }
+    
+</table>
+
+
