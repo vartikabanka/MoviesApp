@@ -12,7 +12,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Movies}/{action=Review}/{id?}");
+    pattern: "{controller=Profiles}/{action=Index}/{id?}");
 
 
 app.Run();

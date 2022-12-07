@@ -9,6 +9,7 @@ namespace MoviesApp.Data
         { }
        
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
     }
 }
     
