@@ -18,11 +18,9 @@ namespace MoviesApp.Models
         [Required]
         public string? Description { get; set; }
         [Required]
-        [Display(Name = "Upload your profile image")]
+        [Display(Name = "Profile image URL")]
         public string ProfileImageUrl { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
-
-
-    }
+     }
 }

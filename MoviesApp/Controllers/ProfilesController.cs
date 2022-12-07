@@ -56,21 +56,21 @@ namespace MoviesApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Profile profile)
         {
-                var fn= Path.GetFileName(profile.Image.FileName);
+            if (ModelState.IsValid)
+            {
+                var fn = Path.GetFileName(profile.Image.FileName);
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", fn);
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     profile.Image.CopyTo(fileStream);
                 }
                 profile.ProfileImageUrl = path;
-                return View(profile);                
-        }
-
-        public async Task<IActionResult> AddProfileinDB(Profile profile)
-        {
-            _context.Add(profile);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Add(profile);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+                            
         }
 
 
