@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoviesApp.Models
 {
@@ -17,6 +18,11 @@ namespace MoviesApp.Models
         [Required]
         public string? Description { get; set; }
         [Required]
+        [Display(Name = "Upload your profile image")]
         public string ProfileImageUrl { get; set; }
+        [NotMapped]
+        public IFormFile Image { get; set; }
+
+
     }
 }

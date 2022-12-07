@@ -32,18 +32,12 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-           <!-- <div class="form-group">
-                <label asp-for="ProfileImageUrl" class="control-label"></label>
-                <input asp-for="ProfileImageUrl" class="form-control" />
-                <span asp-validation-for="ProfileImageUrl" class="text-danger"></span>
-            </div>-->
-            <div>
-                @Html.TextBox("file", "", new {  type= "file"}) <br /><br />
-
-               <!-- <input type="submit" asp-action="UploadFile" class="btn btn-dark" value="Upload" />                <p class="text-danger"> @ViewBag.Message</p>
-                 <p class="text-primary"> @ViewBag.fn uploaded successfully!</p>-->
-
+           <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

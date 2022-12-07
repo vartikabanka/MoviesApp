@@ -54,7 +54,27 @@ namespace MoviesApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProfileId,Name,DOB,Address,Description,ProfileImageUrl")] Profile profile)
+        public async Task<IActionResult> Create(Profile profile)
+        {
+                var fn= Path.GetFileName(profile.Image.FileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", fn);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    profile.Image.CopyTo(fileStream);
+                }
+                profile.ProfileImageUrl = path;
+                return View(profile);                
+        }
+
+        public async Task<IActionResult> AddProfileinDB(Profile profile)
+        {
+            _context.Add(profile);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        /**public async Task<IActionResult> Create([Bind("ProfileId,Name,DOB,Address,Description,ProfileImageUrl")] Profile profile)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +83,9 @@ namespace MoviesApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(profile);
-        }
+        }**/
+
+
 
         // GET: Profiles/Edit/5
         public async Task<IActionResult> Edit(int? id)
