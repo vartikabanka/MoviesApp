@@ -10,6 +10,8 @@ namespace MoviesApp.Data
        
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<MoviesApp.Models.Product> Product { get; set; }
+        public DbSet<MoviesApp.Models.Photo> Photo { get; set; }
     }
 }
     

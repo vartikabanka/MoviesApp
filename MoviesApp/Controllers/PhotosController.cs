@@ -10,102 +10,90 @@ using MoviesApp.Models;
 
 namespace MoviesApp.Controllers
 {
-    public class ProfilesController : Controller
+    public class PhotosController : Controller
     {
         private readonly MoviesAppDbContext _context;
 
-        public ProfilesController(MoviesAppDbContext context)
+        public PhotosController(MoviesAppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Profiles
+        // GET: Photos
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Profiles.ToListAsync());
+            var moviesAppDbContext = _context.Photo.Include(p => p.Product);
+            return View(await moviesAppDbContext.ToListAsync());
         }
 
-        // GET: Profiles/Details/5
+        // GET: Photos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Profiles == null)
+            if (id == null || _context.Photo == null)
             {
                 return NotFound();
             }
 
-            var profile = await _context.Profiles
-                .FirstOrDefaultAsync(m => m.ProfileId == id);
-            if (profile == null)
+            var photo = await _context.Photo
+                .Include(p => p.Product)
+                .FirstOrDefaultAsync(m => m.PhotoId == id);
+            if (photo == null)
             {
                 return NotFound();
             }
 
-            return View(profile);
+            return View(photo);
         }
 
-        // GET: Profiles/Create
+        // GET: Photos/Create
         public IActionResult Create()
         {
+            ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "Description");
             return View();
         }
 
-        // POST: Profiles/Create
+        // POST: Photos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Profile profile)
-        {
-            var fn = Path.GetFileName(profile.Image.FileName);
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", fn);
-            using (var fileStream = new FileStream(path, FileMode.Create))
-            {
-                profile.Image.CopyTo(fileStream);
-            }
-            profile.ProfileImageUrl = path;
-            _context.Add(profile);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));                
-        }
-
-
-        /**public async Task<IActionResult> Create([Bind("ProfileId,Name,DOB,Address,Description,ProfileImageUrl")] Profile profile)
+        public async Task<IActionResult> Create([Bind("PhotoId,ImageData,Description,FileExtension,Size,ProductId")] Photo photo)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(profile);
+                _context.Add(photo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(profile);
-        }**/
-
-
-
-        // GET: Profiles/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Profiles == null)
-            {
-                return NotFound();
-            }
-
-            var profile = await _context.Profiles.FindAsync(id);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-            return View(profile);
+            ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "Description", photo.ProductId);
+            return View(photo);
         }
 
-        // POST: Profiles/Edit/5
+        // GET: Photos/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Photo == null)
+            {
+                return NotFound();
+            }
+
+            var photo = await _context.Photo.FindAsync(id);
+            if (photo == null)
+            {
+                return NotFound();
+            }
+            ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "Description", photo.ProductId);
+            return View(photo);
+        }
+
+        // POST: Photos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProfileId,Name,DOB,Address,Description,ProfileImageUrl")] Profile profile)
+        public async Task<IActionResult> Edit(int id, [Bind("PhotoId,ImageData,Description,FileExtension,Size,ProductId")] Photo photo)
         {
-            if (id != profile.ProfileId)
+            if (id != photo.PhotoId)
             {
                 return NotFound();
             }
@@ -114,12 +102,12 @@ namespace MoviesApp.Controllers
             {
                 try
                 {
-                    _context.Update(profile);
+                    _context.Update(photo);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProfileExists(profile.ProfileId))
+                    if (!PhotoExists(photo.PhotoId))
                     {
                         return NotFound();
                     }
@@ -130,49 +118,51 @@ namespace MoviesApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(profile);
+            ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "Description", photo.ProductId);
+            return View(photo);
         }
 
-        // GET: Profiles/Delete/5
+        // GET: Photos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Profiles == null)
+            if (id == null || _context.Photo == null)
             {
                 return NotFound();
             }
 
-            var profile = await _context.Profiles
-                .FirstOrDefaultAsync(m => m.ProfileId == id);
-            if (profile == null)
+            var photo = await _context.Photo
+                .Include(p => p.Product)
+                .FirstOrDefaultAsync(m => m.PhotoId == id);
+            if (photo == null)
             {
                 return NotFound();
             }
 
-            return View(profile);
+            return View(photo);
         }
 
-        // POST: Profiles/Delete/5
+        // POST: Photos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Profiles == null)
+            if (_context.Photo == null)
             {
-                return Problem("Entity set 'MoviesAppDbContext.Profiles'  is null.");
+                return Problem("Entity set 'MoviesAppDbContext.Photo'  is null.");
             }
-            var profile = await _context.Profiles.FindAsync(id);
-            if (profile != null)
+            var photo = await _context.Photo.FindAsync(id);
+            if (photo != null)
             {
-                _context.Profiles.Remove(profile);
+                _context.Photo.Remove(photo);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProfileExists(int id)
+        private bool PhotoExists(int id)
         {
-          return _context.Profiles.Any(e => e.ProfileId == id);
+          return _context.Photo.Any(e => e.PhotoId == id);
         }
     }
 }
