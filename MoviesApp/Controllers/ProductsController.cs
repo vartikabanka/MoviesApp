@@ -60,6 +60,13 @@ namespace MoviesApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View(product);
+            var Pro = new Product()
+            {
+                ProductId = product.ProductId,
+                ProductName=product.ProductName,
+                Description=product.Description,
+                MRP=product.MRP,
+            };
             var photo=product.ProductImage;
             using (var ms=new MemoryStream())
             {
@@ -73,8 +80,10 @@ namespace MoviesApp.Controllers
                   //ProductId=product.ProductId,
                 };
                 _context.Add(pic);
+                Pro.photo =pic;
             }
-            _context.Add(product);
+            
+            _context.Add(Pro);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
