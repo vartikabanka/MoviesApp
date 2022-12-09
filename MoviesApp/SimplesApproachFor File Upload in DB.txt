@@ -1,0 +1,74 @@
+﻿ [HttpPost]
+        public async Task<IActionResult> Index(Moviedetail movies, IFormFile Image)
+        {
+           
+                    using (var stream = new MemoryStream())
+                    {
+                        await Image.CopyToAsync(stream);
+                        movies.Image = stream.ToArray();
+
+                    }
+            _context.Moviedetails.Add(movies);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+@model movie_mvc.Models.Moviedetail
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<h4>Moviedetail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MovieName" class="control-label"></label>
+                <input asp-for="MovieName" class="form-control" />
+                <span asp-validation-for="MovieName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovieDescription" class="control-label"></label>
+                <input asp-for="MovieDescription" class="form-control" />
+                <span asp-validation-for="MovieDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovieDate" class="control-label"></label>
+                <input asp-for="MovieDate" class="form-control" />
+                <span asp-validation-for="MovieDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" asp-for="Image" class="form-Control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+
+public class Moviedetail
+    {
+
+        public int Id { get; set; }
+        public string MovieName { get; set; }
+        public string MovieDescription{ get; set; }
+        public DateTime MovieDate { get; set; }
+        public byte[] Image { get; set; }
+    }
